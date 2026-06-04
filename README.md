@@ -168,7 +168,3 @@ Simpan file model yang sudah dilatih ke folder `models/`, lalu sesuaikan nama fi
 - Jika muncul error modul tidak ditemukan, pastikan virtual environment sudah aktif dan dependency sudah di-install.
 - Jika PowerShell menolak aktivasi venv, gunakan langkah `Set-ExecutionPolicy` di atas.
 - Jika hasil prediksi memakai simulasi, itu berarti file model belum ditemukan di lokasi yang diharapkan.
-
-## Lisensi
-
-Belum ditentukan.

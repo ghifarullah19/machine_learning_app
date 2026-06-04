@@ -32,14 +32,14 @@ if pilihan_menu == "📈 Regresi (Prediksi Minyak Pemanas)":
 
     if st.button("Hitung Prediksi Konsumsi", type="primary"):
         try:
-            model = joblib.load('model_regresi.pkl')
+            model = joblib.load('models/regresi_model.pkl')
             input_data = pd.DataFrame([[insulation, temperature, num_occupants, avg_age, home_size]],
                                       columns=['Insulation', 'Temperature', 'Num_Occupants', 'Avg_Age', 'Home_Size'])
             prediksi = model.predict(input_data)[0]
             st.success(f"Estimasi Konsumsi Minyak Pemanas: **{prediksi:.2f} unit**")
         except FileNotFoundError:
             dummy_pred = (insulation * 5) + (temperature * -1) + (home_size * 10) + 150
-            st.warning("⚠️ File 'model_regresi.pkl' tidak ditemukan. Menampilkan hasil simulasi:")
+            st.warning("⚠️ File 'regresi_model.pkl' tidak ditemukan. Menampilkan hasil simulasi:")
             st.success(f"Estimasi Konsumsi Minyak Pemanas: **{abs(dummy_pred):.2f} unit**")
 
 
