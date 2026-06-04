@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Demo ML App</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f4f7f6;
+        color: #333;
+        padding: 30px;
+      }
+      .container {
+        max-width: 800px;
+        margin: auto;
+        background-color: #fff;
+        padding: 20px 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      h2 {
+        text-align: center;
+        color: #2c3e50;
+      }
+
+      /* Navigasi Tab */
+      .tab-menu {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #ddd;
+      }
+      .tab-btn {
+        background: none;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        color: #555;
+        border-bottom: 3px solid transparent;
+      }
+      .tab-btn:hover {
+        color: #3498db;
+      }
+      .tab-btn.active {
+        color: #3498db;
+        border-bottom: 3px solid #3498db;
+        font-weight: bold;
+      }
+
+      /* Konten Tab */
+      .tab-content {
+        display: none;
+      }
+      .tab-content.active {
+        display: block;
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+      }
+      .form-group {
+        margin-bottom: 15px;
+      }
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        font-size: 14px;
+      }
+      input,
+      select {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+      }
+
+      button.btn-submit {
+        width: 100%;
+        padding: 12px;
+        background-color: #3498db;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 15px;
+      }
+      button.btn-submit:hover {
+        background-color: #2980b9;
+      }
+
+      .result-box {
+        margin-top: 20px;
+        padding: 15px;
+        background-color: #e8f8f5;
+        border-left: 5px solid #1abc9c;
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Aplikasi Demo Machine Learning</h2>
+
+      <div class="tab-menu">
+        <button class="tab-btn active" onclick="bukaTab(event, 'regresi')">
+          📈 Regresi
+        </button>
+        <button class="tab-btn" onclick="bukaTab(event, 'klasifikasi')">
+          📱 Klasifikasi
+        </button>
+        <button class="tab-btn" onclick="bukaTab(event, 'klasterisasi')">
+          👥 Klasterisasi
+        </button>
+      </div>
+
+      <div id="regresi" class="tab-content active">
+        <h3 style="text-align: center">Prediksi Konsumsi Minyak Pemanas</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Tingkat Insulasi (2-10)</label
+            ><input type="number" id="reg_insulation" value="6" />
+          </div>
+          <div class="form-group">
+            <label>Suhu Lingkungan</label
+            ><input type="number" id="reg_temp" value="65" />
+          </div>
+          <div class="form-group">
+            <label>Jumlah Penghuni</label
+            ><input type="number" id="reg_occ" value="3" />
+          </div>
+          <div class="form-group">
+            <label>Rata-rata Usia</label
+            ><input type="number" id="reg_age" value="42.7" step="0.1" />
+          </div>
+          <div class="form-group">
+            <label>Ukuran Rumah (1-8)</label
+            ><input type="number" id="reg_size" value="4" />
+          </div>
+        </div>
+        <button class="btn-submit" onclick="prediksiRegresi()">
+          Hitung Prediksi Regresi
+        </button>
+        <div class="result-box" id="result_regresi">
+          <strong>Hasil:</strong> <span id="text_regresi"></span>
+        </div>
+      </div>
+
+      <div id="klasifikasi" class="tab-content">
+        <h3 style="text-align: center">Prediksi Adopsi Tablet</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Jenis Kelamin</label
+            ><select id="clf_gender">
+              <option value="M">Laki-laki (M)</option>
+              <option value="F">Perempuan (F)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Usia</label><input type="number" id="clf_age" value="30" />
+          </div>
+          <div class="form-group">
+            <label>Status Pernikahan</label
+            ><select id="clf_marital">
+              <option value="S">Single (S)</option>
+              <option value="M">Married (M)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Aktivitas Web</label
+            ><select id="clf_web">
+              <option value="Seldom">Seldom</option>
+              <option value="Regular">Regular</option>
+              <option value="Frequent">Frequent</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Mencari Elektronik?</label
+            ><select id="clf_browse">
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Beli Elektronik?</label
+            ><select id="clf_buy_elec">
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Beli Media Digital?</label
+            ><select id="clf_buy_media">
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Beli Buku Digital?</label
+            ><select id="clf_buy_book">
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Metode Bayar</label
+            ><select id="clf_payment">
+              <option value="Credit Card">Credit Card</option>
+              <option value="Bank Transfer">Bank Transfer</option>
+              <option value="Website Account">Website Account</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn-submit" onclick="prediksiKlasifikasi()">
+          Klasifikasikan Pelanggan
+        </button>
+        <div class="result-box" id="result_klasifikasi">
+          <strong>Hasil:</strong> <span id="text_klasifikasi"></span>
+        </div>
+      </div>
+
+      <div id="klasterisasi" class="tab-content">
+        <h3 style="text-align: center">Segmentasi Karakteristik Pelanggan</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Pendapatan Tahunan (Income)</label
+            ><input type="number" id="cls_income" value="52000" />
+          </div>
+          <div class="form-group">
+            <label>Jumlah Anak</label
+            ><input type="number" id="cls_kidhome" value="0" />
+          </div>
+          <div class="form-group">
+            <label>Total Pengeluaran</label
+            ><input type="number" id="cls_spending" value="600" />
+          </div>
+          <div class="form-group">
+            <label>Total Transaksi</label
+            ><input type="number" id="cls_purchases" value="15" />
+          </div>
+          <div class="form-group">
+            <label>Pembelian Diskon (Deals)</label
+            ><input type="number" id="cls_deals" value="2" />
+          </div>
+          <div class="form-group">
+            <label>Pembelian Web</label
+            ><input type="number" id="cls_web" value="5" />
+          </div>
+          <div class="form-group">
+            <label>Pembelian Katalog</label
+            ><input type="number" id="cls_catalog" value="3" />
+          </div>
+          <div class="form-group">
+            <label>Pembelian Toko (Store)</label
+            ><input type="number" id="cls_store" value="6" />
+          </div>
+          <div class="form-group">
+            <label>Kunjungan Web/Bulan</label
+            ><input type="number" id="cls_visits" value="5" />
+          </div>
+        </div>
+        <button class="btn-submit" onclick="prediksiKlasterisasi()">
+          Tentukan Klaster
+        </button>
+        <div class="result-box" id="result_klasterisasi">
+          <strong>Hasil:</strong> <span id="text_klasterisasi"></span>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Fungsi untuk berpindah tab UI
+      function bukaTab(evt, namaTab) {
+        var i, tabcontent, tabbtns;
+        tabcontent = document.getElementsByClassName("tab-content");
+        for (i = 0; i < tabcontent.length; i++) {
+          tabcontent[i].style.display = "none";
+        }
+        tabbtns = document.getElementsByClassName("tab-btn");
+        for (i = 0; i < tabbtns.length; i++) {
+          tabbtns[i].className = tabbtns[i].className.replace(" active", "");
+        }
+        document.getElementById(namaTab).style.display = "block";
+        evt.currentTarget.className += " active";
+      }
+
+      // Fungsi Fetch Regresi
+      function prediksiRegresi() {
+        const data = {
+          insulation: document.getElementById("reg_insulation").value,
+          temperature: document.getElementById("reg_temp").value,
+          num_occupants: document.getElementById("reg_occ").value,
+          avg_age: document.getElementById("reg_age").value,
+          home_size: document.getElementById("reg_size").value,
+        };
+        fetch("/predict_regresi", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        })
+          .then((res) => res.json())
+          .then((resData) => {
+            document.getElementById("text_regresi").innerText = resData.hasil;
+            document.getElementById("result_regresi").style.display = "block";
+          });
+      }
+
+      // Fungsi Fetch Klasifikasi
+      function prediksiKlasifikasi() {
+        const data = {
+          gender: document.getElementById("clf_gender").value,
+          age: document.getElementById("clf_age").value,
+          marital_status: document.getElementById("clf_marital").value,
+          website_activity: document.getElementById("clf_web").value,
+          browsed_electronics: document.getElementById("clf_browse").value,
+          bought_electronics: document.getElementById("clf_buy_elec").value,
+          bought_media: document.getElementById("clf_buy_media").value,
+          bought_books: document.getElementById("clf_buy_book").value,
+          payment_method: document.getElementById("clf_payment").value,
+        };
+        fetch("/predict_klasifikasi", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        })
+          .then((res) => res.json())
+          .then((resData) => {
+            document.getElementById("text_klasifikasi").innerText =
+              resData.hasil;
+            document.getElementById("result_klasifikasi").style.display =
+              "block";
+          });
+      }
+
+      // Fungsi Fetch Klasterisasi
+      function prediksiKlasterisasi() {
+        const data = {
+          income: document.getElementById("cls_income").value,
+          kidhome: document.getElementById("cls_kidhome").value,
+          total_spending: document.getElementById("cls_spending").value,
+          num_purchases: document.getElementById("cls_purchases").value,
+          num_deals: document.getElementById("cls_deals").value,
+          num_web: document.getElementById("cls_web").value,
+          num_catalog: document.getElementById("cls_catalog").value,
+          num_store: document.getElementById("cls_store").value,
+          num_visits: document.getElementById("cls_visits").value,
+        };
+        fetch("/predict_klasterisasi", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        })
+          .then((res) => res.json())
+          .then((resData) => {
+            document.getElementById("text_klasterisasi").innerText =
+              resData.hasil;
+            document.getElementById("result_klasterisasi").style.display =
+              "block";
+          });
+      }
+    </script>
+  </body>
+</html>
